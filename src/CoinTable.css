@@ -1,0 +1,12 @@
+.Coin-table {
+  margin: 0 auto;
+  background-color: #e5e5e5;
+  margin-top: 50px;
+  width: 80%;
+  color: black;
+}
+
+.Coin-table td {
+  padding-right: 50px;
+  text-align: center;
+}
