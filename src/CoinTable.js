@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import './CoinTable.css';
+import keys from '../.secrets.js';
+
+console.log(keys.BTCE_KEY)
 
 let btce = {
+  /*
   key: process.env.BTCE_KEY,
   secret: process.env.BTCE_SECRET,
   url: "https://btc-e.com:443/api/2/",
+  */
 }
 
 class CoinTable extends Component {

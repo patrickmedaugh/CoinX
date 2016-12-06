@@ -13,4 +13,5 @@ build
 .DS_Store
 .env
 .secrets.env
+.secrets.js
 npm-debug.log
