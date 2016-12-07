@@ -1,20 +1,41 @@
 import React, { Component } from 'react';
 import './CoinTable.css';
-import keys from '../.secrets.js';
+import $ from 'jquery';
 
-console.log(keys.BTCE_KEY)
-
-let btce = {
-  /*
-  key: process.env.BTCE_KEY,
-  secret: process.env.BTCE_SECRET,
-  url: "https://btc-e.com:443/api/2/",
-  */
-}
+const serverUrl = process.env.URL || 'http://localhost:8080'
+const litecoinBtcePath = serverUrl + '/litecoin-btce';
+const bitcoinBtcePath = serverUrl + '/bitcoin-btce';
+const dashPlxPath = serverUrl + '/dash-poloniex';
 
 class CoinTable extends Component {
-  getCurrencies() {
+  constructor() {
+    super()
+    this.state = {
+      bitcoinUSD: "",
+      ethereumBtce: "-",
+      litecoinBtce: "-",
+      dashBtce: "-",
+      ethereumPol: "-",
+      litecoinPol: "-",
+      dashPol: "-",
+    };
+  }
 
+  getCurrencies() {
+    let litecoinBtce;
+    let bitcoinUSD;
+
+    $.get(litecoinBtcePath).done((data) => {
+      this.setState({litecoinBtce: data.ltc_btc.avg})
+    })
+
+    $.get(bitcoinBtcePath).done((data) => {
+      this.setState({bitcoinUSD: data.btc_usd.avg})
+    });
+
+    $.get(dashPlxPath).done((data) => {
+      debugger;
+    })
   }
 
   render() {
@@ -28,20 +49,22 @@ class CoinTable extends Component {
           </thead>
           <tbody>
             <tr>
-              <td id="ethereum-btce-cointable"></td>
-              <td id="litecoin-btce-cointable"></td>
-              <td id="dash-btce-cointable"></td>
+              <td id="ethereumBtce-cointable">{this.state.ethereumBtce}</td>
+              <td id="litecoinBtce-cointable">{this.state.litecoinBtce}</td>
+              <td id="dashBtce-cointable">{this.state.dashBtce}</td>
             </tr>
             <tr>
-              <td id="ethereum-poloniex-cointable"></td>
-              <td id="litecoin-poloniex-cointable"></td>
-              <td id="dash-poloniex-cointable"></td>
+              <td id="ethereum-poloniex-cointable">{this.state.ethereumPol}</td>
+              <td id="litecoin-poloniex-cointable">{this.state.litecoinPol}</td>
+              <td id="dash-poloniex-cointable">{this.state.dashPol}</td>
             </tr>
           </tbody>
         </table>
+        <button onClick={this.getCurrencies.bind(this)}>Refresh</button>
       </div>
     );
   }
+
 }
 
 export default CoinTable;
