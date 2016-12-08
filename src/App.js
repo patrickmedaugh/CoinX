@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import CoinTable from './CoinTable';
 import TopTicker from './TopTicker';
-import Chart from './Chart';
+import CoinChart from './CoinChart';
 
 class App extends Component {
 
@@ -14,7 +14,7 @@ class App extends Component {
           <h2>Coin Xchange</h2>
         </div>
             <TopTicker />
-            <Chart />
+            <CoinChart />
             <CoinTable />
       </div>
     );
