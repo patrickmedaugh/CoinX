@@ -7,10 +7,60 @@ const getPath = (currency, api) => {
     return `${serverUrl}/${api}/${currency}`
 }
 
+const TopTickerCurrencies = [
+  {
+    name: 'litecoin',
+    getBtce () {
+      return $.get(getPath('litecoin', 'btce')).done((data) => {
+          console.log('in litecoin object')
+          console.log(this.state)
+          this.setState({currentCurrencyName: 'litecoin'});
+          this.setState({currentCurrencyAttrs: data.ltc_btc });
+      });
+    }
+  },
+
+  {
+    name: 'bitcoin',
+    getBtce () {
+      $.get(getPath('bitcoin', 'btce')).done((data) => {
+          console.log('in bitcoin object')
+          console.log(this.state)
+          this.setState({currentCurrencyName: 'bitcoin'});
+          this.setState({currentCurrencyAttrs: data.btc_usd});
+        });
+      }
+    },
+
+  {
+    name: 'ethereum',
+    getBtce() {
+      $.get(getPath('ethereum', 'btce')).done((data) => {
+          console.log('in bitcoin object')
+          console.log(this.state)
+          this.setState({currentCurrencyName: 'ethereum'});
+          this.setState({currentCurrencyAttrs: data.eth_btc});
+        });
+      }
+    },
+    {
+      name: 'dash',
+      getBtce() {
+        $.get(getPath('dash', 'btce')).done((data) => {
+          console.log('in dash object')
+          console.log(this.state)
+          this.setState({currentCurrencyName: 'dash'});
+          this.setState({currentCurrencyAttrs: data.dsh_btc});
+        })
+      }
+    },
+]
+
 class CurrencyCard extends Component {
   render() {
     return (
       <div className="Currency-card">
+      <h3>{this.props.name}</h3>
       <table>
         <tr>
           <td>High: </td>
@@ -42,69 +92,41 @@ class TopTicker extends Component {
   constructor() {
     super()
     this.state = {
-      currentCard: 0,
+      currentCard: 1,
+      currencies: TopTickerCurrencies,
+      currentCurrencyAttrs: {
+        high: "-",
+        low:  "-",
+        buy:  "-",
+        sell: "-",
+        vol:  "-",
+      }
     }
-    this.currencies = [
-      {
-        name: 'litecoin',
-        getBtce () {
-          $.get(getPath('litecoin', 'btce')).done((data) => {
-              return data.ltc_btc
-          });
-        }
-      },
-
-      {
-        name: 'bitcoin',
-        getBtce () {
-          $.get(getPath('bitcoin', 'btce')).done((data) => {
-              return data.btc_usd;
-            });
-          }
-        },
-
-      {
-        name: 'ethereum',
-        getBtce() {
-          $.get(getPath('ethereum', 'btce')).done((data) => {
-              return data.eth_btc;
-            });
-          }
-        },
-    ]
   }
 
   componentDidMount() {
-    this.getCardInfo();
+    this.getCurrentCurrency();
+  }
+
+  getCurrentCurrency() {
+    this.state.currencies[this.state.currentCard].getBtce.call(this);
   }
 
   incrementCard() {
-    if (this.state.currentCard === this.currencies.length) {
+    if (this.state.currentCard === this.state.currencies.length - 1) {
       this.setState({currentCard: 0});
     } else {
       this.setState({currentCard: this.state.currentCard + 1});
     }
-  }
-
-  getCardInfo() {
-    //const tickerCurrency  = topTickerCurrencies[currentCard];
-    //const currentCurrency = tickerCurrency.getBtce();
+    this.getCurrentCurrency();
   }
 
   render() {
-    //CANT call setState within render or it will re-render. Really need to think about this.
-    //MAYBE setState, change the currentCard value and do a a timeout so it will re-render the next card??
-    $.get(getPath('litecoin', 'btce')).done((data) => {
-        //this.setState({currentCurrency: data.ltc_btc})
-        return data.ltc_btc
-    });
-    const currentCurrency = this.currencies[1] //hardcoded Zero for now. Change this later.
     console.log(this.state)
-    //-->Would something like this work: this.getCurrencies.bind(this)();
     return (
       <div className="Top-ticker">
-        <CurrencyCard high="high" low="low" buy="buy" sell="sell" vol="vol"/>
-
+        <CurrencyCard name={this.state.currentCurrencyName} high={this.state.currentCurrencyAttrs.high} low={this.state.currentCurrencyAttrs.low} buy={this.state.currentCurrencyAttrs.buy} sell={this.state.currentCurrencyAttrs.sell} vol={this.state.currentCurrencyAttrs.vol}/>
+          <button onClick={this.incrementCard.bind(this)} />
       </div>
     );
   }

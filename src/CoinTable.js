@@ -27,29 +27,39 @@ class CoinTable extends Component {
 
   getCurrencies() {
     $.get(getPath('litecoin', 'btce')).done((data) => {
-      this.setState({litecoinBtce: data.ltc_btc.avg})
-    })
-
-    $.get(getPath('bitcoin', 'btce')).done((data) => {
-      this.setState({bitcoinUSD: data.btc_usd.avg})
+      this.setState({litecoinBtce: data.ltc_btc.avg});
     });
 
-    $.get(getPath('dash', 'poloniex')).done((data) => {
-      this.setState({dashPlx: data})
+    $.get(getPath('bitcoin', 'btce')).done((data) => {
+      this.setState({bitcoinUSD: parseFloat(data.btc_usd.avg).toFixed(2)});
+    });
+
+    $.get(getPath('ethereum', 'btce')).done((data) => {
+      this.setState({ethereumBtce: data.eth_btc.avg});
+    });
+
+    $.get(getPath('dash', 'btce')).done((data) => {
+      this.setState({dashBtce: data.dsh_btc.avg});
     })
+
+    $.get(getPath('dash', 'poloniex')).done((data) => {
+      this.setState({dashPlx: data});
+    });
 
     $.get(getPath('litecoin', 'poloniex')).done((data) => {
-      this.setState({litecoinPlx: data})
-    })
+      this.setState({litecoinPlx: data});
+    });
 
     $.get(getPath('ethereum', 'poloniex')).done((data) => {
-      this.setState({ethereumPlx: data})
-    })
+      this.setState({ethereumPlx: data});
+    });
   }
 
   render() {
     return (
       <div className="Coin-table-section">
+        <h3>Bitcoin (USD)</h3>
+        <div>{this.state.bitcoinUSD}</div>
         <table className="Coin-table">
           <thead>
             <td></td>
