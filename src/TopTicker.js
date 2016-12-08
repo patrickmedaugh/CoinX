@@ -7,35 +7,6 @@ const getPath = (currency, api) => {
     return `${serverUrl}/${api}/${currency}`
 }
 
-const topTickerCurrencies = [
-  {
-    name: 'litecoin',
-    getBtce: () => {
-      $.get(getPath('litecoin', 'btce')).done((data) => {
-          this.setState({litecoinBtce: data.ltc_btc});
-      });
-    }
-  },
-
-  {
-    name: 'bitcoin',
-    getBtce: () => {
-      $.get(getPath('bitcoin', 'btce')).done((data) => {
-          this.setState({bitcoinBtce: data.btc_usd});
-        });
-      }
-    },
-
-  {
-    name: 'ethereum',
-    getBtce: () => {
-      $.get(getPath('ethereum', 'btce')).done((data) => {
-          this.setState({ethereumBtce: data.eth_btc});
-        });
-      }
-    },
-]
-
 class CurrencyCard extends Component {
   render() {
     return (
@@ -70,10 +41,37 @@ class CurrencyCard extends Component {
 class TopTicker extends Component {
   constructor() {
     super()
-  }
+    this.state = {
+      currentCard: 0,
+    }
+    this.currencies = [
+      {
+        name: 'litecoin',
+        getBtce () {
+          $.get(getPath('litecoin', 'btce')).done((data) => {
+              return data.ltc_btc
+          });
+        }
+      },
 
-  getInitialState() {
-    return ({currentCard: 0})
+      {
+        name: 'bitcoin',
+        getBtce () {
+          $.get(getPath('bitcoin', 'btce')).done((data) => {
+              return data.btc_usd;
+            });
+          }
+        },
+
+      {
+        name: 'ethereum',
+        getBtce() {
+          $.get(getPath('ethereum', 'btce')).done((data) => {
+              return data.eth_btc;
+            });
+          }
+        },
+    ]
   }
 
   componentDidMount() {
@@ -81,10 +79,10 @@ class TopTicker extends Component {
   }
 
   incrementCard() {
-    if (this.state.currentCard === topTickerCurrencies.length) {
-      this.state.currentCard = 0;
+    if (this.state.currentCard === this.currencies.length) {
+      this.setState({currentCard: 0});
     } else {
-      this.state.currentCard += 1;
+      this.setState({currentCard: this.state.currentCard + 1});
     }
   }
 
@@ -94,8 +92,15 @@ class TopTicker extends Component {
   }
 
   render() {
-    const currentCurrency = topTickerCurrencies[0] //hardcoded Zero for now. Change this later.
-    const currentAttrs    = currentCurrency.getBtce.call(this);
+    //CANT call setState within render or it will re-render. Really need to think about this.
+    //MAYBE setState, change the currentCard value and do a a timeout so it will re-render the next card??
+    $.get(getPath('litecoin', 'btce')).done((data) => {
+        //this.setState({currentCurrency: data.ltc_btc})
+        return data.ltc_btc
+    });
+    const currentCurrency = this.currencies[1] //hardcoded Zero for now. Change this later.
+    console.log(this.state)
+    //-->Would something like this work: this.getCurrencies.bind(this)();
     return (
       <div className="Top-ticker">
         <CurrencyCard high="high" low="low" buy="buy" sell="sell" vol="vol"/>

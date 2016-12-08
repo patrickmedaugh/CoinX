@@ -71,7 +71,6 @@ class CoinTable extends Component {
               <td id="litecoin-label">Litecoin</td>
               <td id="litecoin-poloniex-cointable">{this.state.litecoinPlx}</td>
               <td id="litecoinBtce-cointable">{this.state.litecoinBtce}</td>
-
             </tr>
           </tbody>
         </table>
