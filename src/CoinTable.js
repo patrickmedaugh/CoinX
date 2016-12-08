@@ -49,26 +49,29 @@ class CoinTable extends Component {
 
   render() {
     return (
-      <div className="Coin-table">
-        <div className="Bitcoin-header">Bitcoin - USD
-        <div className="Btc-usd">{this.state.bitcoinUSD}</div>
-        </div>
+      <div className="Coin-table-section">
         <table className="Coin-table">
           <thead>
-            <td>Ethereum</td>
-            <td>Litecoin</td>
-            <td>DASH</td>
+            <td></td>
+            <td>Poloniex</td>
+            <td>BTC-E</td>
           </thead>
           <tbody>
-            <tr>
+            <tr className="left-labels">
+              <td id="ethereum-label">Ethereum</td>
+              <td id="ethereum-poloniex-cointable">{this.state.ethereumPlx}</td>
               <td id="ethereumBtce-cointable">{this.state.ethereumBtce}</td>
-              <td id="litecoinBtce-cointable">{this.state.litecoinBtce}</td>
+            </tr>
+            <tr>
+              <td id="dash-label">DASH</td>
+              <td id="dash-poloniex-cointable">{this.state.dashPlx}</td>
               <td id="dashBtce-cointable">{this.state.dashBtce}</td>
             </tr>
             <tr>
-              <td id="ethereum-poloniex-cointable">{this.state.ethereumPlx}</td>
+              <td id="litecoin-label">Litecoin</td>
               <td id="litecoin-poloniex-cointable">{this.state.litecoinPlx}</td>
-              <td id="dash-poloniex-cointable">{this.state.dashPlx}</td>
+              <td id="litecoinBtce-cointable">{this.state.litecoinBtce}</td>
+
             </tr>
           </tbody>
         </table>

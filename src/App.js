@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import CoinTable from './CoinTable';
+import TopTicker from './TopTicker';
 
 class App extends Component {
 
@@ -10,9 +11,10 @@ class App extends Component {
       <div className="App">
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h2>Coin Xchange Table</h2>
-            <CoinTable />
+          <h2>Coin Xchange</h2>
         </div>
+            <TopTicker />
+            <CoinTable />
       </div>
     );
   }
