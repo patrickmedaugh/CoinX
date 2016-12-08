@@ -15,7 +15,7 @@ const TopTickerCurrencies = [
           console.log('in litecoin object')
           console.log(this.state)
           this.setState({currentCurrencyName: 'litecoin'});
-          this.setState({currentCurrencyAttrs: data.ltc_btc });
+          this.setState({currentCurrencyAttrs: data });
       });
     }
   },
@@ -27,7 +27,7 @@ const TopTickerCurrencies = [
           console.log('in bitcoin object')
           console.log(this.state)
           this.setState({currentCurrencyName: 'bitcoin'});
-          this.setState({currentCurrencyAttrs: data.btc_usd});
+          this.setState({currentCurrencyAttrs: data});
         });
       }
     },
@@ -39,7 +39,7 @@ const TopTickerCurrencies = [
           console.log('in bitcoin object')
           console.log(this.state)
           this.setState({currentCurrencyName: 'ethereum'});
-          this.setState({currentCurrencyAttrs: data.eth_btc});
+          this.setState({currentCurrencyAttrs: data});
         });
       }
     },
@@ -50,7 +50,7 @@ const TopTickerCurrencies = [
           console.log('in dash object')
           console.log(this.state)
           this.setState({currentCurrencyName: 'dash'});
-          this.setState({currentCurrencyAttrs: data.dsh_btc});
+          this.setState({currentCurrencyAttrs: data});
         })
       }
     },

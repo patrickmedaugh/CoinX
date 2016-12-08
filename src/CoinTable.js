@@ -27,19 +27,19 @@ class CoinTable extends Component {
 
   getCurrencies() {
     $.get(getPath('litecoin', 'btce')).done((data) => {
-      this.setState({litecoinBtce: data.ltc_btc.avg});
+      this.setState({litecoinBtce: data.avg});
     });
 
     $.get(getPath('bitcoin', 'btce')).done((data) => {
-      this.setState({bitcoinUSD: parseFloat(data.btc_usd.avg).toFixed(2)});
+      this.setState({bitcoinUSD: parseFloat(data.avg).toFixed(2)});
     });
 
     $.get(getPath('ethereum', 'btce')).done((data) => {
-      this.setState({ethereumBtce: data.eth_btc.avg});
+      this.setState({ethereumBtce: data.avg});
     });
 
     $.get(getPath('dash', 'btce')).done((data) => {
-      this.setState({dashBtce: data.dsh_btc.avg});
+      this.setState({dashBtce: data.avg});
     })
 
     $.get(getPath('dash', 'poloniex')).done((data) => {
