@@ -3,9 +3,9 @@ import './CoinTable.css';
 import $ from 'jquery';
 
 const serverUrl = process.env.URL || 'http://localhost:8080'
-const litecoinBtcePath = serverUrl + '/litecoin-btce';
-const bitcoinBtcePath = serverUrl + '/bitcoin-btce';
-const dashPlxPath = serverUrl + '/dash-poloniex';
+const getPath = (currency, api) => {
+    return `${serverUrl}/${api}/${currency}`
+}
 
 class CoinTable extends Component {
   constructor() {
@@ -15,32 +15,44 @@ class CoinTable extends Component {
       ethereumBtce: "-",
       litecoinBtce: "-",
       dashBtce: "-",
-      ethereumPol: "-",
-      litecoinPol: "-",
-      dashPol: "-",
+      ethereumPlx: "-",
+      litecoinPlx: "-",
+      dashPlx: "-",
     };
   }
 
-  getCurrencies() {
-    let litecoinBtce;
-    let bitcoinUSD;
+  componentDidMount() {
+      this.getCurrencies();
+  }
 
-    $.get(litecoinBtcePath).done((data) => {
+  getCurrencies() {
+    $.get(getPath('litecoin', 'btce')).done((data) => {
       this.setState({litecoinBtce: data.ltc_btc.avg})
     })
 
-    $.get(bitcoinBtcePath).done((data) => {
+    $.get(getPath('bitcoin', 'btce')).done((data) => {
       this.setState({bitcoinUSD: data.btc_usd.avg})
     });
 
-    $.get(dashPlxPath).done((data) => {
-      debugger;
+    $.get(getPath('dash', 'poloniex')).done((data) => {
+      this.setState({dashPlx: data})
+    })
+
+    $.get(getPath('litecoin', 'poloniex')).done((data) => {
+      this.setState({litecoinPlx: data})
+    })
+
+    $.get(getPath('ethereum', 'poloniex')).done((data) => {
+      this.setState({ethereumPlx: data})
     })
   }
 
   render() {
     return (
       <div className="Coin-table">
+        <div className="Bitcoin-header">Bitcoin - USD
+        <div className="Btc-usd">{this.state.bitcoinUSD}</div>
+        </div>
         <table className="Coin-table">
           <thead>
             <td>Ethereum</td>
@@ -54,9 +66,9 @@ class CoinTable extends Component {
               <td id="dashBtce-cointable">{this.state.dashBtce}</td>
             </tr>
             <tr>
-              <td id="ethereum-poloniex-cointable">{this.state.ethereumPol}</td>
-              <td id="litecoin-poloniex-cointable">{this.state.litecoinPol}</td>
-              <td id="dash-poloniex-cointable">{this.state.dashPol}</td>
+              <td id="ethereum-poloniex-cointable">{this.state.ethereumPlx}</td>
+              <td id="litecoin-poloniex-cointable">{this.state.litecoinPlx}</td>
+              <td id="dash-poloniex-cointable">{this.state.dashPlx}</td>
             </tr>
           </tbody>
         </table>
