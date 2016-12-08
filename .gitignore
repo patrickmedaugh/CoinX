@@ -15,5 +15,3 @@ build
 .secrets.env
 .secrets.js
 npm-debug.log
-
-/db/*

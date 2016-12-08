@@ -70,6 +70,10 @@ class CurrencyCard extends Component {
           <td>Low: </td>
           <td>{this.props.low}</td>
         </tr>
+          <td>Average: </td>
+          <td>{this.props.avg}</td>
+        <tr>
+        </tr>
         <tr>
           <td>Buy: </td>
           <td>{this.props.buy}</td>
@@ -125,7 +129,7 @@ class TopTicker extends Component {
     console.log(this.state)
     return (
       <div className="Top-ticker">
-        <CurrencyCard name={this.state.currentCurrencyName} high={this.state.currentCurrencyAttrs.high} low={this.state.currentCurrencyAttrs.low} buy={this.state.currentCurrencyAttrs.buy} sell={this.state.currentCurrencyAttrs.sell} vol={this.state.currentCurrencyAttrs.vol}/>
+        <CurrencyCard name={this.state.currentCurrencyName} high={this.state.currentCurrencyAttrs.high} low={this.state.currentCurrencyAttrs.low} avg={this.state.currentCurrencyAttrs.avg} buy={this.state.currentCurrencyAttrs.buy} sell={this.state.currentCurrencyAttrs.sell} vol={this.state.currentCurrencyAttrs.vol}/>
           <button onClick={this.incrementCard.bind(this)} />
       </div>
     );
