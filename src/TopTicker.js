@@ -111,6 +111,7 @@ class TopTicker extends Component {
       this.setState({currentCard: this.state.currentCard + 1});
     }
     this.getCurrentCurrency();
+    console.log(this.state)
   }
 
   render() {
