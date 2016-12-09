@@ -3,7 +3,7 @@
 
 Backend repo: https://github.com/patrickmedaugh/CoinXBackend 
 
-#### The Top Ticker will scroll through currencies when the white button is clicked. The Chart at the bottom will update from the APIs and save to the DB when 'Refresh' is clicked and the chart will retrieve the last 20 records and display them.
+The Top Ticker will scroll through currencies when the white button is clicked. The Chart at the bottom will update from the APIs and save to the DB when 'Refresh' is clicked and the chart will retrieve the last 20 records and display them.
 
 ##Setup
 * Run `npm install`
