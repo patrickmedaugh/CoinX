@@ -1,3 +1,27 @@
+# CoinX
+#### Track cryptocurrency values (built in MERN)
+
+Backend repo: https://github.com/patrickmedaugh/CoinXBackend 
+
+##Setup
+* Run `npm install`
+* Clone backend: `git clone https://github.com/patrickmedaugh/CoinXBackend`
+* Follow directions at https://github.com/patrickmedaugh/CoinXBackend to start backend server
+
+##To run tests:
+* `npm test`
+
+##To run server: 
+* `npm start`
+
+##Issue with MacOSSierra
+* Problems with running test suite in Sierra are noted here: https://github.com/facebook/react-native/issues/9309#issuecomment-238966924
+
+
+
+###Create React App Info Below:
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>
