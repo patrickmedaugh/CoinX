@@ -7,45 +7,18 @@ const getPath = (currency, api) => {
     return `${serverUrl}/${api}/${currency}`
 }
 
+const getTopTickerCurrency = (currency, component) => {
+  $.get(getPath(currency, 'btce')).done((data) => {
+      component.setState({currentCurrencyName: currency});
+      component.setState({currentCurrencyAttrs: data });
+  });
+}
+
 const TopTickerCurrencies = [
-  {
-    name: 'litecoin',
-    getBtce () {
-      return $.get(getPath('litecoin', 'btce')).done((data) => {
-          this.setState({currentCurrencyName: 'litecoin'});
-          this.setState({currentCurrencyAttrs: data });
-      });
-    }
-  },
-
-  {
-    name: 'bitcoin',
-    getBtce () {
-      $.get(getPath('bitcoin', 'btce')).done((data) => {
-          this.setState({currentCurrencyName: 'bitcoin'});
-          this.setState({currentCurrencyAttrs: data});
-        });
-      }
-    },
-
-  {
-    name: 'ethereum',
-    getBtce() {
-      $.get(getPath('ethereum', 'btce')).done((data) => {
-          this.setState({currentCurrencyName: 'ethereum'});
-          this.setState({currentCurrencyAttrs: data});
-        });
-      }
-    },
-    {
-      name: 'dash',
-      getBtce() {
-        $.get(getPath('dash', 'btce')).done((data) => {
-          this.setState({currentCurrencyName: 'dash'});
-          this.setState({currentCurrencyAttrs: data});
-        })
-      }
-    },
+  'litecoin',
+  'ethereum',
+  'dash',
+  'bitcoin',
 ]
 
 class CurrencyCard extends Component {
@@ -97,11 +70,7 @@ class TopTicker extends Component {
   }
 
   componentDidMount() {
-    this.getCurrentCurrency();
-  }
-
-  getCurrentCurrency() {
-    this.state.currencies[this.state.currentCard].getBtce.call(this);
+    this.incrementCard();
   }
 
   incrementCard() {
@@ -111,7 +80,10 @@ class TopTicker extends Component {
       this.setState({currentCard: this.state.currentCard + 1});
     }
     this.getCurrentCurrency();
-    console.log(this.state)
+  }
+
+  getCurrentCurrency() {
+    getTopTickerCurrency(this.state.currencies[this.state.currentCard], this)
   }
 
   render() {
