@@ -6,7 +6,9 @@ Backend repo: https://github.com/patrickmedaugh/CoinXBackend
 ##Setup
 * Run `npm install`
 * Clone backend: `git clone https://github.com/patrickmedaugh/CoinXBackend`
+* May need to run: `npm i jquery && npm i react-scripts && npm i react && npm i react-dom && npm i chart.js`
 * Follow directions at https://github.com/patrickmedaugh/CoinXBackend to start backend server
+
 
 ##To run tests:
 * `npm test`
