@@ -12,7 +12,7 @@ class CoinChart extends Component {
     let ethereumData = [];
     let litecoinData = [];
     let dashData     = [];
-    this.call().then(([dashRes, ethereumRes, litecoinRes]) => {
+    this.callServices().then(([dashRes, ethereumRes, litecoinRes]) => {
       dashRes.forEach((doc) => {
         dashData.push(doc.data.rate);
       });
@@ -81,7 +81,7 @@ class CoinChart extends Component {
     });
   }
 
-  call() {
+  callServices() {
     return Promise.all([
       this.dash(),
       this.ethereum(),
