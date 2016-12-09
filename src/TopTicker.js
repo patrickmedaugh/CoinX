@@ -12,8 +12,6 @@ const TopTickerCurrencies = [
     name: 'litecoin',
     getBtce () {
       return $.get(getPath('litecoin', 'btce')).done((data) => {
-          console.log('in litecoin object')
-          console.log(this.state)
           this.setState({currentCurrencyName: 'litecoin'});
           this.setState({currentCurrencyAttrs: data });
       });
@@ -24,8 +22,6 @@ const TopTickerCurrencies = [
     name: 'bitcoin',
     getBtce () {
       $.get(getPath('bitcoin', 'btce')).done((data) => {
-          console.log('in bitcoin object')
-          console.log(this.state)
           this.setState({currentCurrencyName: 'bitcoin'});
           this.setState({currentCurrencyAttrs: data});
         });
@@ -36,8 +32,6 @@ const TopTickerCurrencies = [
     name: 'ethereum',
     getBtce() {
       $.get(getPath('ethereum', 'btce')).done((data) => {
-          console.log('in bitcoin object')
-          console.log(this.state)
           this.setState({currentCurrencyName: 'ethereum'});
           this.setState({currentCurrencyAttrs: data});
         });
@@ -47,8 +41,6 @@ const TopTickerCurrencies = [
       name: 'dash',
       getBtce() {
         $.get(getPath('dash', 'btce')).done((data) => {
-          console.log('in dash object')
-          console.log(this.state)
           this.setState({currentCurrencyName: 'dash'});
           this.setState({currentCurrencyAttrs: data});
         })
@@ -60,33 +52,29 @@ class CurrencyCard extends Component {
   render() {
     return (
       <div className="Currency-card">
-      <h3>{this.props.name}</h3>
-      <table>
-        <tr>
-          <td>High: </td>
-          <td>{this.props.high}</td>
-        </tr>
-        <tr>
-          <td>Low: </td>
-          <td>{this.props.low}</td>
-        </tr>
-          <td>Average: </td>
-          <td>{this.props.avg}</td>
-        <tr>
-        </tr>
-        <tr>
-          <td>Buy: </td>
-          <td>{this.props.buy}</td>
-        </tr>
-        <tr>
-          <td>Sell: </td>
-          <td>{this.props.sell}</td>
-        </tr>
-        <tr>
-          <td>Volume: </td>
-          <td>{this.props.vol}</td>
-        </tr>
-      </table>
+        <h3>{this.props.name}</h3>
+        <table>
+          <tbody>
+            <tr>
+              <td>High: </td>
+              <td>{this.props.high}</td>
+              <td>Buy: </td>
+              <td>{this.props.buy}</td>
+            </tr>
+            <tr>
+              <td>Low: </td>
+              <td>{this.props.low}</td>
+              <td>Sell: </td>
+              <td>{this.props.sell}</td>
+            </tr>
+            <tr>
+              <td>Average: </td>
+              <td>{this.props.avg}</td>
+              <td>Volume: </td>
+              <td>{this.props.vol}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     )
   }
@@ -126,7 +114,6 @@ class TopTicker extends Component {
   }
 
   render() {
-    console.log(this.state)
     return (
       <div className="Top-ticker">
         <CurrencyCard name={this.state.currentCurrencyName} high={this.state.currentCurrencyAttrs.high} low={this.state.currentCurrencyAttrs.low} avg={this.state.currentCurrencyAttrs.avg} buy={this.state.currentCurrencyAttrs.buy} sell={this.state.currentCurrencyAttrs.sell} vol={this.state.currentCurrencyAttrs.vol}/>

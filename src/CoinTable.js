@@ -58,8 +58,6 @@ class CoinTable extends Component {
   render() {
     return (
       <div className="Coin-table-section">
-        <h3>Bitcoin (USD)</h3>
-        <div>{this.state.bitcoinUSD}</div>
         <table className="Coin-table">
           <thead>
             <td></td>
@@ -67,7 +65,7 @@ class CoinTable extends Component {
             <td>BTC-E</td>
           </thead>
           <tbody>
-            <tr className="left-labels">
+            <tr>
               <td id="ethereum-label">Ethereum</td>
               <td id="ethereum-poloniex-cointable">{this.state.ethereumPlx}</td>
               <td id="ethereumBtce-cointable">{this.state.ethereumBtce}</td>
