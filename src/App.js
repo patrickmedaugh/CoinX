@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import $ from 'jquery';
 import CoinTable from './CoinTable';
@@ -13,37 +12,62 @@ class AppService {
     return `${serverUrl}/${api}/${currency}`
   }
 
-  getCurrencies() {
-    let accumulator = {}
-    this.getServices().then(([litecoinBtce, litecoinPlx, bitcoinBtce, dashBtce, dashPlx, ethereumBtce, ethereumPlx]) => {
-      accumulator.litecoinBtce = litecoinBtce;
-      accumulator.litecoinPlx  = litecoinPlx;
-      accumulator.bitcoinBtce  = bitcoinBtce;
-      accumulator.dashBtce     = dashBtce;
-      accumulator.dashPlx      = dashPlx;
-      accumulator.ethereumBtce = ethereumBtce;
-      accumulator.ethereumPlx  = ethereumPlx;
-    });
-    return accumulator;
+  getCurrencies(component) {
+    this.getServices(component)
+    .then(([litecoinBtce, litecoinPlx, bitcoinBtce, dashBtce, dashPlx, ethereumBtce, ethereumPlx]) => {
+      const accumulator = {
+        litecoinBtceAvg:      litecoinBtce.avg,
+        litecoinBtceHigh:     litecoinBtce.high,
+        litecoinBtceLow:      litecoinBtce.low,
+        litecoinBtceBuy:      litecoinBtce.buy,
+        litecoinBtceSell:     litecoinBtce.sell,
+        litecoinBtceVol:      litecoinBtce.vol,
+        bitcoinBtceAvg:       bitcoinBtce.avg,
+        bitcoinBtceHigh:      bitcoinBtce.high,
+        bitcoinBtceLow:       bitcoinBtce.low,
+        bitcoinBtceBuy:       bitcoinBtce.buy,
+        bitcoinBtceSell:      bitcoinBtce.sell,
+        bitcoinBtceVol:       bitcoinBtce.vol,
+        dashBtceAvg:          dashBtce.avg,
+        dashBtceHigh:         dashBtce.high,
+        dashBtceLow:          dashBtce.low,
+        dashBtceBuy:          dashBtce.buy,
+        dashBtceSell:         dashBtce.sell,
+        dashBtceVol:          dashBtce.vol,
+        ethereumBtceAvg:      ethereumBtce.avg,
+        ethereumBtceHigh:     ethereumBtce.high,
+        ethereumBtceLow:      ethereumBtce.low,
+        ethereumBtceBuy:      ethereumBtce.buy,
+        ethereumBtceSell:     ethereumBtce.sell,
+        ethereumBtceVol:      ethereumBtce.vol,
+        litecoinPlx:          litecoinPlx,
+        ethereumPlx:          ethereumPlx,
+        dashPlx:              dashPlx,
+      }
+      component.setState(accumulator);
+    })
+    .catch((err) =>{
+      console.log(err);
+    })
   }
 
-  getServices() {
+  getServices(component) {
     return Promise.all([
-      this.getCurrency('litecoin', 'btce'),
-      this.getCurrency('litecoin', 'poloniex'),
-      this.getCurrency('bitcoin', 'btce'),
-      this.getCurrency('dash', 'btce'),
-      this.getCurrency('dash', 'poloniex'),
-      this.getCurrency('ethereum', 'btce'),
-      this.getCurrency('ethereum', 'poloniex'),
+      this.getCurrency(component, 'litecoin', 'btce'),
+      this.getCurrency(component, 'litecoin', 'poloniex'),
+      this.getCurrency(component, 'bitcoin', 'btce'),
+      this.getCurrency(component, 'dash', 'btce'),
+      this.getCurrency(component, 'dash', 'poloniex'),
+      this.getCurrency(component, 'ethereum', 'btce'),
+      this.getCurrency(component, 'ethereum', 'poloniex'),
     ]);
   }
 
-  getCurrency(currency, api) {
+  getCurrency(component, currency, api) {
     let response = {};
     return $.get(this.getPath(currency, api)).done((data) => {
-      const attr = `${currency}${api}`
-      response[attr] =  data;
+      const attr = `${currency}${api}`;
+      component.setState({attr:data});
     })
     return response;
   }
@@ -52,23 +76,18 @@ class AppService {
 class App extends Component {
   constructor() {
     super();
-    const appServe   = new AppService();
-    const currencies = appServe.getCurrencies();
     this.state = {
-      dashPlx: '-',
+      litecoinBtce: '-',
+      litecoinPlx:  '-',
+      bitcoinUSD:   '-',
+      ethereumBtce: '-',
+      ethereumPlx:  '-',
+      dashBtce:     '-',
+      dashPlx:      '-',
     };
-  }
-
-  componentDidMount() {
     const appServe   = new AppService();
-    const currencies = appServe.getCurrencies();
-    console.log(currencies)
-    this.state = {
-      dashPlx: currencies.dashPlx
-    }
-    console.log(this.state)
+    appServe.getCurrencies(this);
   }
-
 
   render() {
     return (
@@ -76,9 +95,19 @@ class App extends Component {
         <div className="App-header">
           <h2>Coin Xchange</h2>
         </div>
-        <TopTicker />
+        <TopTicker litecoinBtceHigh={this.state.litecoinBtceHigh} litecoinBtceLow={this.state.litecoinBtceLow} litecoinBtceAvg={this.state.litecoinBtceAvg}
+                   litecoinBtceBuy={this.state.litecoinBtceBuy} litecoinBtceSell={this.state.litecoinBtceSell} litecoinBtceVol={this.state.litecoinBtceVol}
+                   ethereumBtceHigh={this.state.ethereumBtceHigh} ethereumBtceLow={this.state.ethereumBtceLow} ethereumBtceAvg={this.state.ethereumBtceAvg}
+                   ethereumBtceBuy={this.state.ethereumBtceBuy} ethereumBtceSell={this.state.ethereumBtceSell} ethereumBtceVol={this.state.ethereumBtceVol}
+                   bitcoinBtceHigh={this.state.bitcoinBtceHigh} bitcoinBtceLow={this.state.bitcoinBtceLow} bitcoinBtceAvg={this.state.bitcoinBtceAvg}
+                   bitcoinBtceBuy={this.state.bitcoinBtceBuy} bitcoinBtceSell={this.state.bitcoinBtceSell} bitcoinBtceVol={this.state.bitcoinBtceVol}
+                   dashBtceHigh={this.state.dashBtceHigh} dashBtceLow={this.state.dashBtceLow} dashBtceAvg={this.state.dashBtceAvg}
+                   dashBtceBuy={this.state.dashBtceBuy} dashBtceSell={this.state.dashBtceSell} dashBtceVol={this.state.dashBtceVol}
+        />
         <CoinChart />
-        <CoinTable dashPlx={this.state.dashPlx}/>
+        <CoinTable ethereumPlx={this.state.ethereumPlx} ethereumBtce={this.state.ethereumBtceAvg}
+                   dashPlx={this.state.dashPlx} dashBtce={this.state.dashBtceAvg}
+                   litecoinPlx={this.state.litecoinPlx} litecoinBtce={this.state.litecoinBtceAvg} />
       </div>
     );
   }

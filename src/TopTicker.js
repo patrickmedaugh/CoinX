@@ -1,25 +1,5 @@
 import React, { Component } from 'react';
 import './TopTicker.css';
-import $ from 'jquery';
-
-const serverUrl = process.env.URL || 'http://localhost:8080'
-const getPath = (currency, api) => {
-    return `${serverUrl}/${api}/${currency}`
-}
-
-const getTopTickerCurrency = (currency, component) => {
-  $.get(getPath(currency, 'btce')).done((data) => {
-      component.setState({currentCurrencyName: currency});
-      component.setState({currentCurrencyAttrs: data });
-  });
-}
-
-const TopTickerCurrencies = [
-  'litecoin',
-  'ethereum',
-  'dash',
-  'bitcoin',
-]
 
 class CurrencyCard extends Component {
   render() {
@@ -57,20 +37,22 @@ class TopTicker extends Component {
   constructor() {
     super()
     this.state = {
-      currentCard: 1,
-      currencies: TopTickerCurrencies,
-      currentCurrencyAttrs: {
-        high: "-",
-        low:  "-",
-        buy:  "-",
-        sell: "-",
-        vol:  "-",
-      }
+      currentCard: 0,
+      currencies: [
+        'ethereum',
+        'bitcoin',
+        'litecoin',
+        'dash',
+      ],
     }
   }
 
   componentDidMount() {
     this.incrementCard();
+  }
+
+  getCurrentCurrency() {
+    return this.state.currencies[this.state.currentCard];
   }
 
   incrementCard() {
@@ -79,18 +61,21 @@ class TopTicker extends Component {
     } else {
       this.setState({currentCard: this.state.currentCard + 1});
     }
-    this.getCurrentCurrency();
   }
 
-  getCurrentCurrency() {
-    getTopTickerCurrency(this.state.currencies[this.state.currentCard], this)
+  setBtceCard(currency) {
+    return (
+      <CurrencyCard id={`${currency}-btce-card`} name={currency}
+        high={this.props[`${currency}BtceHigh`]} low={this.props[`${currency}BtceLow`]} avg={this.props[`${currency}BtceAvg`]}
+        buy={this.props[`${currency}BtceBuy`]} sell={this.props[`${currency}BtceSell`]} vol={this.props[`${currency}BtceVol`]} />
+    )
   }
 
   render() {
     return (
       <div className="Top-ticker">
-        <CurrencyCard name={this.state.currentCurrencyName} high={this.state.currentCurrencyAttrs.high} low={this.state.currentCurrencyAttrs.low} avg={this.state.currentCurrencyAttrs.avg} buy={this.state.currentCurrencyAttrs.buy} sell={this.state.currentCurrencyAttrs.sell} vol={this.state.currentCurrencyAttrs.vol}/>
-          <button onClick={this.incrementCard.bind(this)} />
+        {this.setBtceCard(this.getCurrentCurrency())}
+        <button onClick={this.incrementCard.bind(this)}>Next</button>
       </div>
     );
   }

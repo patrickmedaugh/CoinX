@@ -73,7 +73,7 @@ class CoinChart extends Component {
         }
       }
 
-      const lineChart = new Chart(ctx, {
+      new Chart(ctx, {
         type: 'line',
         data: data,
         options: options
