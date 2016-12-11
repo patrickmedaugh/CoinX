@@ -10,24 +10,50 @@ const serverUrl = process.env.URL || 'http://localhost:8080'
 class AppService {
   getPath (currency, api) {
     return `${serverUrl}/${api}/${currency}`
-  }
+  };
 
-  queryMongo(component) {
+  getMongoQuery(currency) {
+    return $.get(this.getPath(currency, 'mongo'));
+  };
+
+  getMongoQueries() {
     return Promise.all([
       this.getMongoQuery('litecoin'),
       this.getMongoQuery('dash'),
       this.getMongoQuery('ethereum'),
     ]);
-  }
+  };
 
-  getMongoQuery(currency) {
-    return $.get(this.getPath(currency, 'mongo')).done((data) => {
-      return data;
+  queryMongo(component) {
+    this.getMongoQueries()
+    .then(([litecoinMongo, dashMongo, ethereumMongo]) => {
+      const accumulator = {
+        litecoinMongo: litecoinMongo,
+        dashMongo:     dashMongo,
+        ethereumMongo: ethereumMongo,
+      }
+      component.setState(accumulator)
     });
-  }
+  };
+
+  getCurrency(currency, api) {
+    return $.get(this.getPath(currency, api))
+  };
+
+  getServices() {
+    return Promise.all([
+      this.getCurrency('litecoin', 'btce'),
+      this.getCurrency('litecoin', 'poloniex'),
+      this.getCurrency('bitcoin', 'btce'),
+      this.getCurrency('dash', 'btce'),
+      this.getCurrency('dash', 'poloniex'),
+      this.getCurrency('ethereum', 'btce'),
+      this.getCurrency('ethereum', 'poloniex'),
+    ]);
+  };
 
   getCurrencies(component) {
-    this.getServices(component)
+    this.getServices()
     .then(([litecoinBtce, litecoinPlx, bitcoinBtce, dashBtce, dashPlx, ethereumBtce, ethereumPlx]) => {
       const accumulator = {
         litecoinBtceAvg:      litecoinBtce.avg,
@@ -62,69 +88,65 @@ class AppService {
     })
     .catch((err) =>{
       console.log(err);
-    })
+    });
   }
-
-  getServices(component) {
-    return Promise.all([
-      this.getCurrency(component, 'litecoin', 'btce'),
-      this.getCurrency(component, 'litecoin', 'poloniex'),
-      this.getCurrency(component, 'bitcoin', 'btce'),
-      this.getCurrency(component, 'dash', 'btce'),
-      this.getCurrency(component, 'dash', 'poloniex'),
-      this.getCurrency(component, 'ethereum', 'btce'),
-      this.getCurrency(component, 'ethereum', 'poloniex'),
-    ]);
-  }
-
-  getCurrency(component, currency, api) {
-    return $.get(this.getPath(currency, api)).done((data) => {
-      const attr = `${currency}${api}`;
-      component.setState({ attr: data});
-    })
-  }
-}
+};
 
 class App extends Component {
   constructor() {
     super();
     this.state = { init: '' };
     const appServe   = new AppService();
+    appServe.queryMongo(this);
     appServe.getCurrencies(this);
   }
 
-  componentDidMount() {
-    const appServe   = new AppService();
-    let mongoQueries;
-    appServe.queryMongo(this).then((data) => {
-      mongoQueries = data;
-      this.forceUpdate();
-      this.setState({mongoQueries: mongoQueries})
-      console.log('after query mongo', this.state.mongoQueries)
-    });
-  }
   render() {
-
-    return (
-      <div className="App">
-        <div className="App-header">
-          <h2>Coin Xchange</h2>
+    console.log('inside App.js', this.state )
+    if (this.state.litecoinMongo !== undefined) {
+      console.log('in good render')
+      return (
+        <div className="App">
+          <div className="App-header">
+            <h2>Coin Xchange</h2>
+          </div>
+          <TopTicker litecoinBtceHigh={this.state.litecoinBtceHigh} litecoinBtceLow={this.state.litecoinBtceLow} litecoinBtceAvg={this.state.litecoinBtceAvg}
+                     litecoinBtceBuy={this.state.litecoinBtceBuy} litecoinBtceSell={this.state.litecoinBtceSell} litecoinBtceVol={this.state.litecoinBtceVol}
+                     ethereumBtceHigh={this.state.ethereumBtceHigh} ethereumBtceLow={this.state.ethereumBtceLow} ethereumBtceAvg={this.state.ethereumBtceAvg}
+                     ethereumBtceBuy={this.state.ethereumBtceBuy} ethereumBtceSell={this.state.ethereumBtceSell} ethereumBtceVol={this.state.ethereumBtceVol}
+                     bitcoinBtceHigh={this.state.bitcoinBtceHigh} bitcoinBtceLow={this.state.bitcoinBtceLow} bitcoinBtceAvg={this.state.bitcoinBtceAvg}
+                     bitcoinBtceBuy={this.state.bitcoinBtceBuy} bitcoinBtceSell={this.state.bitcoinBtceSell} bitcoinBtceVol={this.state.bitcoinBtceVol}
+                     dashBtceHigh={this.state.dashBtceHigh} dashBtceLow={this.state.dashBtceLow} dashBtceAvg={this.state.dashBtceAvg}
+                     dashBtceBuy={this.state.dashBtceBuy} dashBtceSell={this.state.dashBtceSell} dashBtceVol={this.state.dashBtceVol}
+          />
+          <CoinChart litecoinMongo={this.state.litecoinMongo} ethereumMongo={this.state.ethereumMongo} dashMongo={this.state.dashMongo}/>
+          <CoinTable ethereumPlx={this.state.ethereumPlx} ethereumBtce={this.state.ethereumBtceAvg}
+                     dashPlx={this.state.dashPlx} dashBtce={this.state.dashBtceAvg}
+                     litecoinPlx={this.state.litecoinPlx} litecoinBtce={this.state.litecoinBtceAvg} />
         </div>
-        <TopTicker litecoinBtceHigh={this.state.litecoinBtceHigh} litecoinBtceLow={this.state.litecoinBtceLow} litecoinBtceAvg={this.state.litecoinBtceAvg}
-                   litecoinBtceBuy={this.state.litecoinBtceBuy} litecoinBtceSell={this.state.litecoinBtceSell} litecoinBtceVol={this.state.litecoinBtceVol}
-                   ethereumBtceHigh={this.state.ethereumBtceHigh} ethereumBtceLow={this.state.ethereumBtceLow} ethereumBtceAvg={this.state.ethereumBtceAvg}
-                   ethereumBtceBuy={this.state.ethereumBtceBuy} ethereumBtceSell={this.state.ethereumBtceSell} ethereumBtceVol={this.state.ethereumBtceVol}
-                   bitcoinBtceHigh={this.state.bitcoinBtceHigh} bitcoinBtceLow={this.state.bitcoinBtceLow} bitcoinBtceAvg={this.state.bitcoinBtceAvg}
-                   bitcoinBtceBuy={this.state.bitcoinBtceBuy} bitcoinBtceSell={this.state.bitcoinBtceSell} bitcoinBtceVol={this.state.bitcoinBtceVol}
-                   dashBtceHigh={this.state.dashBtceHigh} dashBtceLow={this.state.dashBtceLow} dashBtceAvg={this.state.dashBtceAvg}
-                   dashBtceBuy={this.state.dashBtceBuy} dashBtceSell={this.state.dashBtceSell} dashBtceVol={this.state.dashBtceVol}
-        />
-        <CoinChart />
-        <CoinTable ethereumPlx={this.state.ethereumPlx} ethereumBtce={this.state.ethereumBtceAvg}
-                   dashPlx={this.state.dashPlx} dashBtce={this.state.dashBtceAvg}
-                   litecoinPlx={this.state.litecoinPlx} litecoinBtce={this.state.litecoinBtceAvg} />
-      </div>
-    );
+      )
+    } else {
+      console.log('in bad render')
+      return (
+        <div className="App">
+          <div className="App-header">
+            <h2>Coin Xchange</h2>
+          </div>
+          <TopTicker litecoinBtceHigh={this.state.litecoinBtceHigh} litecoinBtceLow={this.state.litecoinBtceLow} litecoinBtceAvg={this.state.litecoinBtceAvg}
+                     litecoinBtceBuy={this.state.litecoinBtceBuy} litecoinBtceSell={this.state.litecoinBtceSell} litecoinBtceVol={this.state.litecoinBtceVol}
+                     ethereumBtceHigh={this.state.ethereumBtceHigh} ethereumBtceLow={this.state.ethereumBtceLow} ethereumBtceAvg={this.state.ethereumBtceAvg}
+                     ethereumBtceBuy={this.state.ethereumBtceBuy} ethereumBtceSell={this.state.ethereumBtceSell} ethereumBtceVol={this.state.ethereumBtceVol}
+                     bitcoinBtceHigh={this.state.bitcoinBtceHigh} bitcoinBtceLow={this.state.bitcoinBtceLow} bitcoinBtceAvg={this.state.bitcoinBtceAvg}
+                     bitcoinBtceBuy={this.state.bitcoinBtceBuy} bitcoinBtceSell={this.state.bitcoinBtceSell} bitcoinBtceVol={this.state.bitcoinBtceVol}
+                     dashBtceHigh={this.state.dashBtceHigh} dashBtceLow={this.state.dashBtceLow} dashBtceAvg={this.state.dashBtceAvg}
+                     dashBtceBuy={this.state.dashBtceBuy} dashBtceSell={this.state.dashBtceSell} dashBtceVol={this.state.dashBtceVol}
+          />
+          <CoinTable ethereumPlx={this.state.ethereumPlx} ethereumBtce={this.state.ethereumBtceAvg}
+                     dashPlx={this.state.dashPlx} dashBtce={this.state.dashBtceAvg}
+                     litecoinPlx={this.state.litecoinPlx} litecoinBtce={this.state.litecoinBtceAvg} />
+        </div>
+      )
+    }
   }
 }
 
