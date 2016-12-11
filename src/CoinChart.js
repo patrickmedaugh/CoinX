@@ -8,6 +8,7 @@ const serverUrl = process.env.URL || 'http://localhost:8080'
 class CoinChart extends Component {
 
 
+  /*
   componentDidMount() {
     let ethereumData = [];
     let litecoinData = [];
@@ -100,6 +101,7 @@ class CoinChart extends Component {
   liteCoin() {
     return $.get(serverUrl + '/chart/dash');
   }
+  */
 
   render() {
     return (

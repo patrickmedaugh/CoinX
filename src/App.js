@@ -12,6 +12,20 @@ class AppService {
     return `${serverUrl}/${api}/${currency}`
   }
 
+  queryMongo(component) {
+    return Promise.all([
+      this.getMongoQuery('litecoin'),
+      this.getMongoQuery('dash'),
+      this.getMongoQuery('ethereum'),
+    ]);
+  }
+
+  getMongoQuery(currency) {
+    return $.get(this.getPath(currency, 'mongo')).done((data) => {
+      return data;
+    });
+  }
+
   getCurrencies(component) {
     this.getServices(component)
     .then(([litecoinBtce, litecoinPlx, bitcoinBtce, dashBtce, dashPlx, ethereumBtce, ethereumPlx]) => {
@@ -64,32 +78,33 @@ class AppService {
   }
 
   getCurrency(component, currency, api) {
-    let response = {};
     return $.get(this.getPath(currency, api)).done((data) => {
       const attr = `${currency}${api}`;
-      component.setState({attr:data});
+      component.setState({ attr: data});
     })
-    return response;
   }
 }
 
 class App extends Component {
   constructor() {
     super();
-    this.state = {
-      litecoinBtce: '-',
-      litecoinPlx:  '-',
-      bitcoinUSD:   '-',
-      ethereumBtce: '-',
-      ethereumPlx:  '-',
-      dashBtce:     '-',
-      dashPlx:      '-',
-    };
+    this.state = { init: '' };
     const appServe   = new AppService();
     appServe.getCurrencies(this);
   }
 
+  componentDidMount() {
+    const appServe   = new AppService();
+    let mongoQueries;
+    appServe.queryMongo(this).then((data) => {
+      mongoQueries = data;
+      this.forceUpdate();
+      this.setState({mongoQueries: mongoQueries})
+      console.log('after query mongo', this.state.mongoQueries)
+    });
+  }
   render() {
+
     return (
       <div className="App">
         <div className="App-header">
