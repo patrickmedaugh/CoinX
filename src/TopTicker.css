@@ -1,17 +1,45 @@
 .Top-ticker {
   margin: 0 auto;
-  margin-top: 20px;
+  margin-top: 5px;
   width: 80%;
+}
+
+.Top-ticker--nav {
+  text-align: left;
+  margin-top: 20px;
+  margin-left: 120px;
+}
+
+.Top-ticker--nav span {
+  margin-left: 10px;
+  border-top: 2px solid #e5e5e5;
+  border-left: 2px solid #e5e5e5;
+  border-right: 2px solid #e5e5e5;
+  border-radius: 4px 4px 0px 0px;
+  font-weight: 200;
+  padding: 4px;
 }
 
 .Top-ticker--buttons {
   margin-top: 0px;
 }
 
+.Top-ticker--buttons-left {
+  left: 60px;
+  margin-top: -85px;
+  position: absolute;
+}
+
+.Top-ticker--buttons-right {
+  right: 60px;
+  margin-top: -85px;
+  position: absolute;
+}
+
 .Currency-card {
   border: 2px solid #e5e5e5;
   text-align: left;
-  height: 160px;
+  height: 120px;
   text-transform: uppercase;
   font-weight: 100;
   font-size: 19px;
@@ -39,7 +67,7 @@
 .Currency-card--average {
     float: left;
     font-weight: 400;
-    margin-top:10px;
+    margin-top: -10px;
     margin-left: 40px;
     font-size: 64px;
 }

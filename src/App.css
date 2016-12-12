@@ -1,3 +1,7 @@
+button:hover {
+  cursor: pointer;
+}
+
 .App {
   text-align: center;
   margin-bottom: 20px;
@@ -22,4 +26,8 @@
 
 .App-intro {
   font-size: large;
+}
+
+.Top-ticker--nav-select:hover {
+  cursor: pointer;
 }

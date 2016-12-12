@@ -22,8 +22,8 @@ class CurrencyCard extends Component {
               <td>{this.props.sell}</td>
             </tr>
             <tr>
-              <td>Volume</td>
-              <td>{this.props.vol}</td>
+              <td></td>
+              <td></td>
               <td> </td>
               <td></td>
             </tr>
@@ -45,6 +45,7 @@ class TopTicker extends Component {
         'litecoin',
         'dash',
       ],
+      exchange: 'bitcoin',
     }
   }
 
@@ -76,7 +77,7 @@ class TopTicker extends Component {
     return (
       <CurrencyCard id={`${currency}-btce-card`} name={currency}
         high={this.props[`${currency}BtceHigh`]} low={this.props[`${currency}BtceLow`]} avg={this.props[`${currency}BtceAvg`]}
-        buy={this.props[`${currency}BtceBuy`]} sell={this.props[`${currency}BtceSell`]} vol={this.props[`${currency}BtceVol`]} />
+        buy={this.props[`${currency}BtceBuy`]} sell={this.props[`${currency}BtceSell`]} />
     )
   }
 
@@ -85,8 +86,8 @@ class TopTicker extends Component {
       <div className="Top-ticker">
         {this.setBtceCard(this.getCurrentCurrency())}
         <div className="Top-ticker--buttons">
-          <button onClick={this.decrementCard.bind(this)}>&lt;</button>
-          <button onClick={this.incrementCard.bind(this)}>&gt;</button>
+          <button className="Top-ticker--buttons-left" onClick={this.decrementCard.bind(this)}>&lt;</button>
+          <button className="Top-ticker--buttons-right" onClick={this.incrementCard.bind(this)}>&gt;</button>
         </div>
       </div>
     );

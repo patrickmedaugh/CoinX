@@ -8,19 +8,19 @@ import CoinChart from './CoinChart';
 const serverUrl = process.env.URL || 'http://localhost:8080'
 
 class AppService {
-  getPath (currency, api) {
-    return `${serverUrl}/${api}/${currency}`
+  getPath (currency, exchange, api) {
+    return `${serverUrl}/${api}/${currency}_${exchange}`
   };
 
-  getMongoQuery(currency) {
-    return $.get(this.getPath(currency, 'mongo'));
+  getMongoQuery(currency, exchange) {
+    return $.get(this.getPath(currency, exchange, 'mongo'));
   };
 
   getMongoQueries() {
     return Promise.all([
-      this.getMongoQuery('litecoin'),
-      this.getMongoQuery('dash'),
-      this.getMongoQuery('ethereum'),
+      this.getMongoQuery('litecoin', 'bitcoin'),
+      this.getMongoQuery('dash', 'bitcoin'),
+      this.getMongoQuery('ethereum', 'bitcoin'),
     ]);
   };
 
@@ -36,54 +36,62 @@ class AppService {
     });
   };
 
-  getCurrency(currency, api) {
-    return $.get(this.getPath(currency, api))
+  getCurrency(currency, exchange, api) {
+    return $.get(this.getPath(currency, exchange, api))
   };
 
-  getServices() {
+  getBtceCurrencies(exchange) {
     return Promise.all([
-      this.getCurrency('litecoin', 'btce'),
-      this.getCurrency('litecoin', 'poloniex'),
-      this.getCurrency('bitcoin', 'btce'),
-      this.getCurrency('dash', 'btce'),
-      this.getCurrency('dash', 'poloniex'),
-      this.getCurrency('ethereum', 'btce'),
-      this.getCurrency('ethereum', 'poloniex'),
+      this.getCurrency('litecoin', exchange, 'btce'),
+      this.getCurrency('bitcoin', 'usd', 'btce'),
+      this.getCurrency('dash', exchange, 'btce'),
+      this.getCurrency('ethereum', exchange, 'btce'),
     ]);
   };
 
-  getCurrencies(component) {
-    this.getServices()
-    .then(([litecoinBtce, litecoinPlx, bitcoinBtce, dashBtce, dashPlx, ethereumBtce, ethereumPlx]) => {
+  getPoloniexCurrencies() {
+    return Promise.all([
+      this.getCurrency('litecoin', 'bitcoin', 'poloniex'),
+      this.getCurrency('dash', 'bitcoin', 'poloniex'),
+      this.getCurrency('ethereum', 'bitcoin', 'poloniex'),
+    ]);
+  };
+
+  getCurrencies(component, exchange) {
+    this.getPoloniexCurrencies()
+    .then(([litecoinPlx, dashPlx, ethereumPlx]) => {
+      const accumulator = {
+        litecoinPlx:          litecoinPlx,
+        ethereumPlx:          ethereumPlx,
+        dashPlx:              dashPlx,
+      }
+      component.setState(accumulator);
+    });
+    this.getBtceCurrencies(exchange)
+    .then(([litecoinBtce, bitcoinBtce, dashBtce, ethereumBtce]) => {
       const accumulator = {
         litecoinBtceAvg:      parseFloat(litecoinBtce.avg).toFixed(4),
         litecoinBtceHigh:     parseFloat(litecoinBtce.high).toFixed(4),
         litecoinBtceLow:      parseFloat(litecoinBtce.low).toFixed(4),
         litecoinBtceBuy:      parseFloat(litecoinBtce.buy).toFixed(4),
         litecoinBtceSell:     parseFloat(litecoinBtce.sell).toFixed(4),
-        litecoinBtceVol:      parseFloat(litecoinBtce.vol).toFixed(0),
         bitcoinBtceAvg:       parseFloat(bitcoinBtce.avg).toFixed(2),
         bitcoinBtceHigh:      parseFloat(bitcoinBtce.high).toFixed(4),
         bitcoinBtceLow:       parseFloat(bitcoinBtce.low).toFixed(4),
         bitcoinBtceBuy:       parseFloat(bitcoinBtce.buy).toFixed(4),
         bitcoinBtceSell:      parseFloat(bitcoinBtce.sell).toFixed(4),
-        bitcoinBtceVol:       parseFloat(bitcoinBtce.vol).toFixed(0),
         dashBtceAvg:          parseFloat(dashBtce.avg).toFixed(4),
         dashBtceHigh:         parseFloat(dashBtce.high).toFixed(4),
         dashBtceLow:          parseFloat(dashBtce.low).toFixed(4),
         dashBtceBuy:          parseFloat(dashBtce.buy).toFixed(4),
         dashBtceSell:         parseFloat(dashBtce.sell).toFixed(4),
-        dashBtceVol:          parseFloat(dashBtce.vol).toFixed(0),
         ethereumBtceAvg:      parseFloat(ethereumBtce.avg).toFixed(4),
         ethereumBtceHigh:     parseFloat(ethereumBtce.high).toFixed(4),
         ethereumBtceLow:      parseFloat(ethereumBtce.low).toFixed(4),
         ethereumBtceBuy:      parseFloat(ethereumBtce.buy).toFixed(4),
         ethereumBtceSell:     parseFloat(ethereumBtce.sell).toFixed(4),
-        ethereumBtceVol:      parseFloat(ethereumBtce.vol).toFixed(0),
-        litecoinPlx:          litecoinPlx,
-        ethereumPlx:          ethereumPlx,
-        dashPlx:              dashPlx,
       }
+      console.log(exchange, accumulator)
       component.setState(accumulator);
     })
     .catch((err) =>{
@@ -95,10 +103,16 @@ class AppService {
 class App extends Component {
   constructor() {
     super();
-    this.state = { init: '' };
+    this.state = { exchange: 'bitcoin' };
     const appServe   = new AppService();
     appServe.queryMongo(this);
-    appServe.getCurrencies(this);
+    appServe.getCurrencies(this, this.state.exchange);
+  }
+
+  setExchange(exchange) {
+    this.setState({exchange: exchange});
+    const appServe   = new AppService();
+    appServe.getCurrencies(this, exchange);
   }
 
   render() {
@@ -107,6 +121,10 @@ class App extends Component {
         <div className="App">
           <div className="App-header">
             <h2 className="App-header--header">CoinX</h2>
+          </div>
+          <div className="Top-ticker--nav">
+            <span onClick={this.setExchange.bind(this, 'bitcoin')} className="Top-ticker--nav-select" id="top-ticker-bitcoin">Bitcoin</span>
+            <span onClick={this.setExchange.bind(this, 'usd')} className="Top-ticker--nav-select" id="top-ticker-usd">USD</span>
           </div>
           <TopTicker litecoinBtceHigh={this.state.litecoinBtceHigh} litecoinBtceLow={this.state.litecoinBtceLow} litecoinBtceAvg={this.state.litecoinBtceAvg}
                      litecoinBtceBuy={this.state.litecoinBtceBuy} litecoinBtceSell={this.state.litecoinBtceSell} litecoinBtceVol={this.state.litecoinBtceVol}
