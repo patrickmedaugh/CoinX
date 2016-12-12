@@ -1,6 +1,64 @@
 .Top-ticker {
   margin: 0 auto;
   margin-top: 20px;
-  background-color: #e5e5e5;
   width: 80%;
+}
+
+.Top-ticker--buttons {
+  margin-top: 0px;
+}
+
+.Currency-card {
+  border: 2px solid #e5e5e5;
+  text-align: left;
+  height: 160px;
+  text-transform: uppercase;
+  font-weight: 100;
+  font-size: 19px;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.Currency-card:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.Currency-card--header {
+  border-bottom: 1px solid #e5e5e5;
+  margin-top: 0px;
+  margin-bottom: 10px;
+  padding: 10px;
+  text-align: left;
+  text-transform: capitalize;
+  font-weight: 100;
+  font-size: 24px;
+}
+
+.Currency-card--average {
+    float: left;
+    font-weight: 400;
+    margin-top:10px;
+    margin-left: 40px;
+    font-size: 64px;
+}
+
+.Currency-card--table {
+  float: right;
+  table-layout: fixed;
+  font-size: 16px;
+  margin-right: 120px;
+}
+
+.Currency-card--table td {
+  display: inline-block;
+  width: 40px;
+  margin-left: 20px;
+  height: 30px;
+  padding-left: 25px;
+}
+
+.Currency-card--table td:nth-child(even) {
+  margin-left: 5px
 }

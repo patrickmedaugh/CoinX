@@ -56,30 +56,30 @@ class AppService {
     this.getServices()
     .then(([litecoinBtce, litecoinPlx, bitcoinBtce, dashBtce, dashPlx, ethereumBtce, ethereumPlx]) => {
       const accumulator = {
-        litecoinBtceAvg:      litecoinBtce.avg,
-        litecoinBtceHigh:     litecoinBtce.high,
-        litecoinBtceLow:      litecoinBtce.low,
-        litecoinBtceBuy:      litecoinBtce.buy,
-        litecoinBtceSell:     litecoinBtce.sell,
-        litecoinBtceVol:      litecoinBtce.vol,
-        bitcoinBtceAvg:       bitcoinBtce.avg,
-        bitcoinBtceHigh:      bitcoinBtce.high,
-        bitcoinBtceLow:       bitcoinBtce.low,
-        bitcoinBtceBuy:       bitcoinBtce.buy,
-        bitcoinBtceSell:      bitcoinBtce.sell,
-        bitcoinBtceVol:       bitcoinBtce.vol,
-        dashBtceAvg:          dashBtce.avg,
-        dashBtceHigh:         dashBtce.high,
-        dashBtceLow:          dashBtce.low,
-        dashBtceBuy:          dashBtce.buy,
-        dashBtceSell:         dashBtce.sell,
-        dashBtceVol:          dashBtce.vol,
-        ethereumBtceAvg:      ethereumBtce.avg,
-        ethereumBtceHigh:     ethereumBtce.high,
-        ethereumBtceLow:      ethereumBtce.low,
-        ethereumBtceBuy:      ethereumBtce.buy,
-        ethereumBtceSell:     ethereumBtce.sell,
-        ethereumBtceVol:      ethereumBtce.vol,
+        litecoinBtceAvg:      parseFloat(litecoinBtce.avg).toFixed(4),
+        litecoinBtceHigh:     parseFloat(litecoinBtce.high).toFixed(4),
+        litecoinBtceLow:      parseFloat(litecoinBtce.low).toFixed(4),
+        litecoinBtceBuy:      parseFloat(litecoinBtce.buy).toFixed(4),
+        litecoinBtceSell:     parseFloat(litecoinBtce.sell).toFixed(4),
+        litecoinBtceVol:      parseFloat(litecoinBtce.vol).toFixed(0),
+        bitcoinBtceAvg:       parseFloat(bitcoinBtce.avg).toFixed(2),
+        bitcoinBtceHigh:      parseFloat(bitcoinBtce.high).toFixed(4),
+        bitcoinBtceLow:       parseFloat(bitcoinBtce.low).toFixed(4),
+        bitcoinBtceBuy:       parseFloat(bitcoinBtce.buy).toFixed(4),
+        bitcoinBtceSell:      parseFloat(bitcoinBtce.sell).toFixed(4),
+        bitcoinBtceVol:       parseFloat(bitcoinBtce.vol).toFixed(0),
+        dashBtceAvg:          parseFloat(dashBtce.avg).toFixed(4),
+        dashBtceHigh:         parseFloat(dashBtce.high).toFixed(4),
+        dashBtceLow:          parseFloat(dashBtce.low).toFixed(4),
+        dashBtceBuy:          parseFloat(dashBtce.buy).toFixed(4),
+        dashBtceSell:         parseFloat(dashBtce.sell).toFixed(4),
+        dashBtceVol:          parseFloat(dashBtce.vol).toFixed(0),
+        ethereumBtceAvg:      parseFloat(ethereumBtce.avg).toFixed(4),
+        ethereumBtceHigh:     parseFloat(ethereumBtce.high).toFixed(4),
+        ethereumBtceLow:      parseFloat(ethereumBtce.low).toFixed(4),
+        ethereumBtceBuy:      parseFloat(ethereumBtce.buy).toFixed(4),
+        ethereumBtceSell:     parseFloat(ethereumBtce.sell).toFixed(4),
+        ethereumBtceVol:      parseFloat(ethereumBtce.vol).toFixed(0),
         litecoinPlx:          litecoinPlx,
         ethereumPlx:          ethereumPlx,
         dashPlx:              dashPlx,
@@ -102,13 +102,11 @@ class App extends Component {
   }
 
   render() {
-    console.log('inside App.js', this.state )
-    if (this.state.litecoinMongo !== undefined) {
-      console.log('in good render')
+      if (this.state.litecoinMongo !== undefined) {
       return (
         <div className="App">
           <div className="App-header">
-            <h2>Coin Xchange</h2>
+            <h2 className="App-header--header">CoinX</h2>
           </div>
           <TopTicker litecoinBtceHigh={this.state.litecoinBtceHigh} litecoinBtceLow={this.state.litecoinBtceLow} litecoinBtceAvg={this.state.litecoinBtceAvg}
                      litecoinBtceBuy={this.state.litecoinBtceBuy} litecoinBtceSell={this.state.litecoinBtceSell} litecoinBtceVol={this.state.litecoinBtceVol}
@@ -126,25 +124,8 @@ class App extends Component {
         </div>
       )
     } else {
-      console.log('in bad render')
       return (
-        <div className="App">
-          <div className="App-header">
-            <h2>Coin Xchange</h2>
-          </div>
-          <TopTicker litecoinBtceHigh={this.state.litecoinBtceHigh} litecoinBtceLow={this.state.litecoinBtceLow} litecoinBtceAvg={this.state.litecoinBtceAvg}
-                     litecoinBtceBuy={this.state.litecoinBtceBuy} litecoinBtceSell={this.state.litecoinBtceSell} litecoinBtceVol={this.state.litecoinBtceVol}
-                     ethereumBtceHigh={this.state.ethereumBtceHigh} ethereumBtceLow={this.state.ethereumBtceLow} ethereumBtceAvg={this.state.ethereumBtceAvg}
-                     ethereumBtceBuy={this.state.ethereumBtceBuy} ethereumBtceSell={this.state.ethereumBtceSell} ethereumBtceVol={this.state.ethereumBtceVol}
-                     bitcoinBtceHigh={this.state.bitcoinBtceHigh} bitcoinBtceLow={this.state.bitcoinBtceLow} bitcoinBtceAvg={this.state.bitcoinBtceAvg}
-                     bitcoinBtceBuy={this.state.bitcoinBtceBuy} bitcoinBtceSell={this.state.bitcoinBtceSell} bitcoinBtceVol={this.state.bitcoinBtceVol}
-                     dashBtceHigh={this.state.dashBtceHigh} dashBtceLow={this.state.dashBtceLow} dashBtceAvg={this.state.dashBtceAvg}
-                     dashBtceBuy={this.state.dashBtceBuy} dashBtceSell={this.state.dashBtceSell} dashBtceVol={this.state.dashBtceVol}
-          />
-          <CoinTable ethereumPlx={this.state.ethereumPlx} ethereumBtce={this.state.ethereumBtceAvg}
-                     dashPlx={this.state.dashPlx} dashBtce={this.state.dashBtceAvg}
-                     litecoinPlx={this.state.litecoinPlx} litecoinBtce={this.state.litecoinBtceAvg} />
-        </div>
+        <div></div>
       )
     }
   }

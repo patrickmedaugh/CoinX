@@ -1,13 +1,23 @@
 .App {
   text-align: center;
+  margin-bottom: 20px;
 }
 
-
 .App-header {
-  background-color: #222;
-  height: 50px;
-  padding: 20px;
+  background-color: #444;
+  border-bottom: 5px solid #ffdb4d;
+  height: 60px;
+  padding: 10px;
   color: white;
+  font-weight: 400;
+  text-align:  left;
+}
+
+.App-header--header {
+  font-family: 'Reem Kufi', sans-serif;
+  padding-left: 20px;
+  font-size: 36px;
+  margin-top: 10px;
 }
 
 .App-intro {

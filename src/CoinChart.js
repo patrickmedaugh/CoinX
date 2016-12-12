@@ -2,54 +2,45 @@ import React, { Component } from 'react';
 import Chart from 'chart.js';
 import './CoinChart.css';
 
-const serverUrl = process.env.URL || 'http://localhost:8080'
-
 class CoinChart extends Component {
   render() {
-    const litecoinMongoData = this.props.litecoinMongo.map((rec) => {
+    let litecoinMongoData = this.props.litecoinMongo.map((rec) => {
       return rec.data.rate
-    });
+    }).reverse();
 
-    const ethereumMongoData = this.props.ethereumMongo.map((rec) => {
+    let ethereumMongoData = this.props.ethereumMongo.map((rec) => {
       return rec.data.rate
-    });
+    }).reverse();
 
-    const dashMongoData = this.props.dashMongo.map((rec) => {
+    let dashMongoData = this.props.dashMongo.map((rec) => {
       return rec.data.rate
-    });
+    }).reverse();
+
+    const allData = dashMongoData.concat(litecoinMongoData).concat(ethereumMongoData);
+    const minimum = Math.min.apply(null, allData)
+    const maximum = Math.max.apply(null, allData)
+    const padding = (maximum - minimum) / 8;
 
     let data = {
       labels: ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
       datasets: [
         {
-          label: "Litecoin",
-          fillColor: "rgba(255,255,255,0.2)",
-          strokeColor: "rgba(220,220,220,1)",
-          pointColor: "rgba(220,220,220,1)",
-          pointStrokeColor: "#fff",
-          pointHighlightFill: "#fff",
-          pointHighlightStroke: "rgba(220,220,220,1)",
-          data: litecoinMongoData,
+          label:           'Litecoin',
+          fill:            false,
+          borderColor:     '#bfbfbf',
+          data:            litecoinMongoData,
         },
         {
-          label: "Ethereum",
-          fillColor: "rgba(255,255,255,0.2)",
-          strokeColor: "rgba(151,187,205,1)",
-          pointColor: "rgba(151,187,205,1)",
-          pointStrokeColor: "#fff",
-          pointHighlightFill: "#fff",
-          pointHighlightStroke: "rgba(151,187,205,1)",
-          data: ethereumMongoData,
+          label:           'Ethereum',
+          fill:            false,
+          borderColor:     '#5c5c8a',
+          data:            ethereumMongoData,
         },
         {
-          label: "DASH",
-          fillColor: "rgba(255,255,255,0.2)",
-          strokeColor: "rgba(151,187,205,1)",
-          pointColor: "rgba(151,187,205,1)",
-          pointStrokeColor: "#fff",
-          pointHighlightFill: "#fff",
-          pointHighlightStroke: "rgba(151,187,205,1)",
-          data: dashMongoData,
+          label:           'DASH',
+          fill:            false,
+          borderColor:     '#80bfff',
+          data:            dashMongoData,
         }
       ]
     };
@@ -58,10 +49,9 @@ class CoinChart extends Component {
       scales: {
         yAxes: [{
           display: true,
-          stacked: true,
           ticks: {
-            min: .01,
-            max: .035,
+            min: Number(parseFloat(minimum - padding).toFixed(3)),
+            max: Number(parseFloat(maximum + padding).toFixed(3)),
           }
         }]
       }

@@ -1,16 +1,33 @@
-.Coin-table {
+.Coin-table--table {
   margin: 0 auto;
-  background-color: #e5e5e5;
+  border: 2px solid #e5e5e5;
   margin-top: 20px;
   width: 80%;
   color: black;
 }
 
-.Coin-table td {
-  padding-right: 50px;
+.Coin-table--table-header {
+  background-color: #666;
+  color: white;
+}
+
+.Coin-table--table {
+  text-align: right;
+  font-weight: 100;
+}
+
+.Coin-table--table-top-label {
+  text-transform: uppercase;
+}
+
+.Coin-table--table-left-label {
+  font-weight: 200;
+  border-right: 0px solid white;
+  width: 175px;
   text-align: center;
 }
 
-.Coin-table .left-labels {
-
+.Coin-table--table td {
+  padding: 5px;
+  padding-right: 50px;
 }

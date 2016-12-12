@@ -5,26 +5,27 @@ class CurrencyCard extends Component {
   render() {
     return (
       <div className="Currency-card">
-        <h3>{this.props.name}</h3>
-        <table>
+        <h3 className="Currency-card--header">{this.props.name}</h3>
+        <div className="Currency-card--average">{this.props.avg}</div>
+        <table className="Currency-card--table">
           <tbody>
             <tr>
-              <td>High: </td>
+              <td>High </td>
               <td>{this.props.high}</td>
-              <td>Buy: </td>
+              <td>Buy </td>
               <td>{this.props.buy}</td>
             </tr>
             <tr>
-              <td>Low: </td>
+              <td>Low </td>
               <td>{this.props.low}</td>
-              <td>Sell: </td>
+              <td>Sell </td>
               <td>{this.props.sell}</td>
             </tr>
             <tr>
-              <td>Average: </td>
-              <td>{this.props.avg}</td>
-              <td>Volume: </td>
+              <td>Volume</td>
               <td>{this.props.vol}</td>
+              <td> </td>
+              <td></td>
             </tr>
           </tbody>
         </table>
@@ -55,6 +56,14 @@ class TopTicker extends Component {
     return this.state.currencies[this.state.currentCard];
   }
 
+  decrementCard() {
+    if (this.state.currentCard === 0) {
+      this.setState({currentCard: this.state.currencies.length - 1});
+    } else {
+      this.setState({currentCard: this.state.currentCard - 1});
+    }
+  }
+
   incrementCard() {
     if (this.state.currentCard === this.state.currencies.length - 1) {
       this.setState({currentCard: 0});
@@ -75,7 +84,10 @@ class TopTicker extends Component {
     return (
       <div className="Top-ticker">
         {this.setBtceCard(this.getCurrentCurrency())}
-        <button onClick={this.incrementCard.bind(this)}>Next</button>
+        <div className="Top-ticker--buttons">
+          <button onClick={this.decrementCard.bind(this)}>&lt;</button>
+          <button onClick={this.incrementCard.bind(this)}>&gt;</button>
+        </div>
       </div>
     );
   }
