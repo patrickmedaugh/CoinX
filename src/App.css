@@ -31,3 +31,7 @@ button:hover {
 .Top-ticker--nav-select:hover {
   cursor: pointer;
 }
+
+.active-tab {
+  background-color: #eeeeee;
+}

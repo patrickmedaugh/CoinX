@@ -58,40 +58,38 @@ class AppService {
   };
 
   getCurrencies(component, exchange) {
+    let accumulator = {};
     this.getPoloniexCurrencies()
     .then(([litecoinPlx, dashPlx, ethereumPlx]) => {
-      const accumulator = {
-        litecoinPlx:          litecoinPlx,
-        ethereumPlx:          ethereumPlx,
-        dashPlx:              dashPlx,
-      }
+      accumulator[`litecoin_${exchange}Plx`] = litecoinPlx,
+      accumulator[`ethereum_${exchange}Plx`] = ethereumPlx,
+      accumulator[`dash_${exchange}Plx`] =     dashPlx,
       component.setState(accumulator);
     });
+    accumulator = {};
     this.getBtceCurrencies(exchange)
     .then(([litecoinBtce, bitcoinBtce, dashBtce, ethereumBtce]) => {
-      const accumulator = {
-        litecoinBtceAvg:      parseFloat(litecoinBtce.avg).toFixed(4),
-        litecoinBtceHigh:     parseFloat(litecoinBtce.high).toFixed(4),
-        litecoinBtceLow:      parseFloat(litecoinBtce.low).toFixed(4),
-        litecoinBtceBuy:      parseFloat(litecoinBtce.buy).toFixed(4),
-        litecoinBtceSell:     parseFloat(litecoinBtce.sell).toFixed(4),
-        bitcoinBtceAvg:       parseFloat(bitcoinBtce.avg).toFixed(2),
-        bitcoinBtceHigh:      parseFloat(bitcoinBtce.high).toFixed(4),
-        bitcoinBtceLow:       parseFloat(bitcoinBtce.low).toFixed(4),
-        bitcoinBtceBuy:       parseFloat(bitcoinBtce.buy).toFixed(4),
-        bitcoinBtceSell:      parseFloat(bitcoinBtce.sell).toFixed(4),
-        dashBtceAvg:          parseFloat(dashBtce.avg).toFixed(4),
-        dashBtceHigh:         parseFloat(dashBtce.high).toFixed(4),
-        dashBtceLow:          parseFloat(dashBtce.low).toFixed(4),
-        dashBtceBuy:          parseFloat(dashBtce.buy).toFixed(4),
-        dashBtceSell:         parseFloat(dashBtce.sell).toFixed(4),
-        ethereumBtceAvg:      parseFloat(ethereumBtce.avg).toFixed(4),
-        ethereumBtceHigh:     parseFloat(ethereumBtce.high).toFixed(4),
-        ethereumBtceLow:      parseFloat(ethereumBtce.low).toFixed(4),
-        ethereumBtceBuy:      parseFloat(ethereumBtce.buy).toFixed(4),
-        ethereumBtceSell:     parseFloat(ethereumBtce.sell).toFixed(4),
-      }
-      console.log(exchange, accumulator)
+      accumulator[`litecoin_${exchange}BtceAvg`] =           parseFloat(litecoinBtce.avg).toFixed(4),
+      accumulator[`litecoin_${exchange}BtceHigh`] =          parseFloat(litecoinBtce.high).toFixed(4),
+      accumulator[`litecoin_${exchange}BtceLow`] =            parseFloat(litecoinBtce.low).toFixed(4),
+      accumulator[`litecoin_${exchange}BtceBuy`] =            parseFloat(litecoinBtce.buy).toFixed(4),
+      accumulator[`litecoin_${exchange}BtceSell`] =           parseFloat(litecoinBtce.sell).toFixed(4),
+      accumulator[`bitcoin_${exchange}BtceAvg`] =             parseFloat(bitcoinBtce.avg).toFixed(2),
+      accumulator[`bitcoin_${exchange}BtceHigh`] =            parseFloat(bitcoinBtce.high).toFixed(4),
+      accumulator[`bitcoin_${exchange}BtceLow`] =             parseFloat(bitcoinBtce.low).toFixed(4),
+      accumulator[`bitcoin_${exchange}BtceBuy`] =             parseFloat(bitcoinBtce.buy).toFixed(4),
+      accumulator[`bitcoin_${exchange}BtceSell`] =            parseFloat(bitcoinBtce.sell).toFixed(4),
+      accumulator[`dash_${exchange}BtceAvg`] =                parseFloat(dashBtce.avg).toFixed(4),
+      accumulator[`dash_${exchange}BtceHigh`] =               parseFloat(dashBtce.high).toFixed(4),
+      accumulator[`dash_${exchange}BtceLow`] =                parseFloat(dashBtce.low).toFixed(4),
+      accumulator[`dash_${exchange}BtceBuy`] =                parseFloat(dashBtce.buy).toFixed(4),
+      accumulator[`dash_${exchange}BtceSell`] =               parseFloat(dashBtce.sell).toFixed(4),
+      accumulator[`ethereum_${exchange}BtceAvg`] =            parseFloat(ethereumBtce.avg).toFixed(4),
+      accumulator[`ethereum_${exchange}BtceHigh`] =           parseFloat(ethereumBtce.high).toFixed(4),
+      accumulator[`ethereum_${exchange}BtceLow`] =            parseFloat(ethereumBtce.low).toFixed(4),
+      accumulator[`ethereum_${exchange}BtceBuy`] =            parseFloat(ethereumBtce.buy).toFixed(4),
+      accumulator[`ethereum_${exchange}BtceSell`] =           parseFloat(ethereumBtce.sell).toFixed(4),
+      console.log('HERE', component.state, accumulator)
       component.setState(accumulator);
     })
     .catch((err) =>{
@@ -103,17 +101,19 @@ class AppService {
 class App extends Component {
   constructor() {
     super();
-    this.state = { exchange: 'bitcoin' };
+    this.state = { 'init': 'true' }
+    const exchanges = [
+      'bitcoin',
+      'usd',
+    ]
     const appServe   = new AppService();
     appServe.queryMongo(this);
-    appServe.getCurrencies(this, this.state.exchange);
+    exchanges.forEach((exchange) => {
+      appServe.getCurrencies(this, exchange);
+    });
   }
 
-  setExchange(exchange) {
-    this.setState({exchange: exchange});
-    const appServe   = new AppService();
-    appServe.getCurrencies(this, exchange);
-  }
+
 
   render() {
       if (this.state.litecoinMongo !== undefined) {
@@ -122,18 +122,21 @@ class App extends Component {
           <div className="App-header">
             <h2 className="App-header--header">CoinX</h2>
           </div>
-          <div className="Top-ticker--nav">
-            <span onClick={this.setExchange.bind(this, 'bitcoin')} className="Top-ticker--nav-select" id="top-ticker-bitcoin">Bitcoin</span>
-            <span onClick={this.setExchange.bind(this, 'usd')} className="Top-ticker--nav-select" id="top-ticker-usd">USD</span>
-          </div>
-          <TopTicker litecoinBtceHigh={this.state.litecoinBtceHigh} litecoinBtceLow={this.state.litecoinBtceLow} litecoinBtceAvg={this.state.litecoinBtceAvg}
-                     litecoinBtceBuy={this.state.litecoinBtceBuy} litecoinBtceSell={this.state.litecoinBtceSell} litecoinBtceVol={this.state.litecoinBtceVol}
-                     ethereumBtceHigh={this.state.ethereumBtceHigh} ethereumBtceLow={this.state.ethereumBtceLow} ethereumBtceAvg={this.state.ethereumBtceAvg}
-                     ethereumBtceBuy={this.state.ethereumBtceBuy} ethereumBtceSell={this.state.ethereumBtceSell} ethereumBtceVol={this.state.ethereumBtceVol}
-                     bitcoinBtceHigh={this.state.bitcoinBtceHigh} bitcoinBtceLow={this.state.bitcoinBtceLow} bitcoinBtceAvg={this.state.bitcoinBtceAvg}
-                     bitcoinBtceBuy={this.state.bitcoinBtceBuy} bitcoinBtceSell={this.state.bitcoinBtceSell} bitcoinBtceVol={this.state.bitcoinBtceVol}
-                     dashBtceHigh={this.state.dashBtceHigh} dashBtceLow={this.state.dashBtceLow} dashBtceAvg={this.state.dashBtceAvg}
-                     dashBtceBuy={this.state.dashBtceBuy} dashBtceSell={this.state.dashBtceSell} dashBtceVol={this.state.dashBtceVol}
+
+          <TopTicker litecoin_bitcoinBtceHigh={this.state.litecoin_bitcoinBtceHigh} litecoin_bitcoinBtceLow={this.state.litecoin_bitcoinBtceLow} litecoin_bitcoinBtceAvg={this.state.litecoin_bitcoinBtceAvg}
+                     litecoin_bitcoinBtceBuy={this.state.litecoin_bitcoinBtceBuy} litecoin_bitcoinBtceSell={this.state.litecoin_bitcoinBtceSell} litecoin_bitcoinBtceVol={this.state.litecoin_bitcoinBtceVol}
+                     ethereum_bitcoinBtceHigh={this.state.ethereum_bitcoinBtceHigh} ethereum_bitcoinBtceLow={this.state.ethereum_bitcoinBtceLow} ethereum_bitcoinBtceAvg={this.state.ethereum_bitcoinBtceAvg}
+                     ethereum_bitcoinBtceBuy={this.state.ethereum_bitcoinBtceBuy} ethereum_bitcoinBtceSell={this.state.ethereum_bitcoinBtceSell} ethereum_bitcoinBtceVol={this.state.ethereum_bitcoinBtceVol}
+                     bitcoin_usdBtceHigh={this.state.bitcoin_usdBtceHigh} bitcoin_usdBtceLow={this.state.bitcoin_usdBtceLow} bitcoin_usdBtceAvg={this.state.bitcoin_usdBtceAvg}
+                     bitcoin_usdBtceBuy={this.state.bitcoin_usdBtceBuy} bitcoin_usdBtceSell={this.state.bitcoin_usdBtceSell} bitcoin_usdBtceVol={this.state.bitcoin_usdBtceVol}
+                     dash_bitcoinBtceHigh={this.state.dash_bitcoinBtceHigh} dash_bitcoinBtceLow={this.state.dash_bitcoinBtceLow} dash_bitcoinBtceAvg={this.state.dash_bitcoinBtceAvg}
+                     dash_bitcoinBtceBuy={this.state.dash_bitcoinBtceBuy} dash_bitcoinBtceSell={this.state.dash_bitcoinBtceSell} dash_bitcoinBtceVol={this.state.dash_bitcoinBtceVol}
+                     litecoin_usdBtceHigh={this.state.litecoin_usdBtceHigh} litecoin_usdBtceLow={this.state.litecoin_usdBtceLow} litecoin_usdBtceAvg={this.state.litecoin_usdBtceAvg}
+                     litecoin_usdBtceBuy={this.state.litecoin_usdBtceBuy} litecoin_usdBtceSell={this.state.litecoin_usdBtceSell} litecoin_usdBtceVol={this.state.litecoin_usdBtceVol}
+                     ethereum_usdBtceHigh={this.state.ethereum_usdBtceHigh} ethereum_usdBtceLow={this.state.ethereum_usdBtceLow} ethereum_usdBtceAvg={this.state.ethereum_usdBtceAvg}
+                     ethereum_usdBtceBuy={this.state.ethereum_usdBtceBuy} ethereum_usdBtceSell={this.state.ethereum_usdBtceSell} ethereum_usdBtceVol={this.state.ethereum_usdBtceVol}
+                     dash_usdBtceHigh={this.state.dash_usdBtceHigh} dash_usdBtceLow={this.state.dash_usdBtceLow} dash_usdBtceAvg={this.state.dash_usdBtceAvg}
+                     dash_usdBtceBuy={this.state.dash_usdBtceBuy} dash_usdBtceSell={this.state.dash_usdBtceSell} dash_usdBtceVol={this.state.dash_usdBtceVol}
           />
           <CoinChart litecoinMongo={this.state.litecoinMongo} ethereumMongo={this.state.ethereumMongo} dashMongo={this.state.dashMongo}/>
           <CoinTable ethereumPlx={this.state.ethereumPlx} ethereumBtce={this.state.ethereumBtceAvg}
