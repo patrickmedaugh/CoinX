@@ -89,7 +89,6 @@ class AppService {
       accumulator[`ethereum_${exchange}BtceLow`] =            parseFloat(ethereumBtce.low).toFixed(4),
       accumulator[`ethereum_${exchange}BtceBuy`] =            parseFloat(ethereumBtce.buy).toFixed(4),
       accumulator[`ethereum_${exchange}BtceSell`] =           parseFloat(ethereumBtce.sell).toFixed(4),
-      console.log('HERE', component.state, accumulator)
       component.setState(accumulator);
     })
     .catch((err) =>{
@@ -139,9 +138,13 @@ class App extends Component {
                      dash_usdBtceBuy={this.state.dash_usdBtceBuy} dash_usdBtceSell={this.state.dash_usdBtceSell} dash_usdBtceVol={this.state.dash_usdBtceVol}
           />
           <CoinChart litecoinMongo={this.state.litecoinMongo} ethereumMongo={this.state.ethereumMongo} dashMongo={this.state.dashMongo}/>
-          <CoinTable ethereumPlx={this.state.ethereum_bitcoinPlx} ethereumBtce={this.state.ethereum_bitcoinBtceAvg}
-                     dashPlx={this.state.dash_bitcoinPlx} dashBtce={this.state.dash_bitcoinBtceAvg}
-                     litecoinPlx={this.state.litecoin_bitcoinPlx} litecoinBtce={this.state.litecoin_bitcoinBtceAvg} />
+          <CoinTable ethereum_bitcoinPlx={this.state.ethereum_bitcoinPlx} ethereum_bitcoinBtce={this.state.ethereum_bitcoinBtceAvg}
+                     dash_bitcoinPlx={this.state.dash_bitcoinPlx} dash_bitcoinBtce={this.state.dash_bitcoinBtceAvg}
+                     litecoin_bitcoinPlx={this.state.litecoin_bitcoinPlx} litecoin_bitcoinBtce={this.state.litecoin_bitcoinBtceAvg}
+                     ethereum_usdPlx="-" ethereum_usdBtce={this.state.ethereum_usdBtceAvg}
+                     dash_usdPlx="-" dash_usdBtce={this.state.dash_usdBtceAvg}
+                     litecoin_usdPlx="-" litecoin_usdBtce={this.state.litecoin_usdBtceAvg}
+          />
         </div>
       )
     } else {

@@ -85,7 +85,7 @@ class TopTicker extends Component {
     }
   }
 
-  setBtceCard(currency, exchange) {
+  renderBtceCard(currency, exchange) {
     return (
       <CurrencyCard id={`${currency}_${exchange}-btce-card`} name={currency}
         high={this.props[`${currency}_${exchange}BtceHigh`]} low={this.props[`${currency}_${exchange}BtceLow`]} avg={this.props[`${currency}_${exchange}BtceAvg`]}
@@ -112,7 +112,7 @@ class TopTicker extends Component {
           <span onClick={this.setExchange.bind(this, 'bitcoin')} className={this.tabIsActive('bitcoin')} id="top-ticker-bitcoin">Bitcoin</span>
           <span onClick={this.setExchange.bind(this, 'usd')} className={this.tabIsActive('usd')} id="top-ticker-usd">USD</span>
         </div>
-        {this.setBtceCard(this.getCurrentCurrency(), this.state.exchange)}
+        {this.renderBtceCard(this.getCurrentCurrency(), this.state.exchange)}
         <div className="Top-ticker--buttons">
           <button className="Top-ticker--buttons-left" onClick={this.buttonDecrementCard.bind(this)}>&lt;</button>
           <button className="Top-ticker--buttons-right" onClick={this.buttonIncrementCard.bind(this)}>&gt;</button>
