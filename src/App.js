@@ -139,9 +139,9 @@ class App extends Component {
                      dash_usdBtceBuy={this.state.dash_usdBtceBuy} dash_usdBtceSell={this.state.dash_usdBtceSell} dash_usdBtceVol={this.state.dash_usdBtceVol}
           />
           <CoinChart litecoinMongo={this.state.litecoinMongo} ethereumMongo={this.state.ethereumMongo} dashMongo={this.state.dashMongo}/>
-          <CoinTable ethereumPlx={this.state.ethereumPlx} ethereumBtce={this.state.ethereumBtceAvg}
-                     dashPlx={this.state.dashPlx} dashBtce={this.state.dashBtceAvg}
-                     litecoinPlx={this.state.litecoinPlx} litecoinBtce={this.state.litecoinBtceAvg} />
+          <CoinTable ethereumPlx={this.state.ethereum_bitcoinPlx} ethereumBtce={this.state.ethereum_bitcoinBtceAvg}
+                     dashPlx={this.state.dash_bitcoinPlx} dashBtce={this.state.dash_bitcoinBtceAvg}
+                     litecoinPlx={this.state.litecoin_bitcoinPlx} litecoinBtce={this.state.litecoin_bitcoinBtceAvg} />
         </div>
       )
     } else {
