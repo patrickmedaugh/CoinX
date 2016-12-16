@@ -1,19 +1,16 @@
 .Coin-table--table {
   margin: 0 auto;
   border: 2px solid #e5e5e5;
-  margin-top: 20px;
+  margin-top: 0px;
   width: 80%;
   color: black;
+  text-align: right;
+  font-weight: 100;
 }
 
 .Coin-table--table-header {
   background-color: #666;
   color: white;
-}
-
-.Coin-table--table {
-  text-align: right;
-  font-weight: 100;
 }
 
 .Coin-table--nav {
